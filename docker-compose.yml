@@ -1,0 +1,9 @@
+version: '3.2'
+
+services:
+  mongo:
+    image: mongo
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    ports:
+      - "27017:27017" 

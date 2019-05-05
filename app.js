@@ -29,6 +29,7 @@ app.use(require('cookie-session')({
   maxAge: 30 * 24 * 60 * 60 * 1000,
   keys: [process.env.SECRET_SESSION || 'secret cat'],
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(Sentry.Handlers.requestHandler());

@@ -14,6 +14,7 @@ Sentry.init({ dsn: process.env.SENTRY_DNS });
 
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
+var userRouter = require('./routes/api/user');
 
 var app = express();
 // view engine setup
@@ -23,8 +24,7 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser()); 
 app.use(require('cookie-session')({
   maxAge: 30 * 24 * 60 * 60 * 1000,
   keys: [process.env.SECRET_SESSION || 'secret cat'],
@@ -36,6 +36,14 @@ app.use(Sentry.Handlers.requestHandler());
 
 app.use('/', indexRouter); 
 app.use('/auth', authRouter); 
+app.use('/api', userRouter); 
+
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static('front-end/build'))
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'front-end', 'build', 'index.html'))
+  })
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -12,7 +12,6 @@ var logger = require('morgan');
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: process.env.SENTRY_DNS });
 
-var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var userRouter = require('./routes/api/user');
 
@@ -33,8 +32,7 @@ app.use(require('cookie-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(Sentry.Handlers.requestHandler());
-
-app.use('/', indexRouter); 
+ 
 app.use('/auth', authRouter); 
 app.use('/api', userRouter); 
 
